@@ -9,28 +9,21 @@
 import UIKit
 
 class PostDetailTableViewController: UITableViewController {
-    
-    var post: Post? {
-        didSet {
-            updateViews()
-        }
-    }
-    
-    var postReceiver: Post?
-    
-    
+        
     // OUTLETS
     @IBOutlet weak var photoImageView: UIImageView!
     
     
+    var post: Post? {
+        didSet {
+            loadViewIfNeeded()
+            updateViews()
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
     }
-    
-    
-    
     
     // Actions
     @IBAction func commentButtonTapped(_ sender: Any) {
@@ -52,6 +45,9 @@ class PostDetailTableViewController: UITableViewController {
     }
     
     @IBAction func shareButtonTapped(_ sender: Any) {
+        guard let caption = post?.caption else { return }
+        let shareSheet = UIActivityViewController(activityItems: [caption], applicationActivities: nil)
+        present(shareSheet, animated: true, completion: nil)
     }
     
     @IBAction func followButtonTapped(_ sender: Any) {
@@ -60,8 +56,7 @@ class PostDetailTableViewController: UITableViewController {
     
     
     func updateViews() {
-        guard let post = post else { return }
-        photoImageView.image = post.photo
+        photoImageView.image = post?.photo
         tableView.reloadData()
     }
     

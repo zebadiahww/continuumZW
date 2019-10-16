@@ -9,7 +9,9 @@
 import UIKit
 import CloudKit
 
-class Post {
+class Post{
+    
+    
     var photoData: Data?
     var timeStamp: Date
     var caption: String
@@ -32,6 +34,7 @@ class Post {
 }
 
 class Comment {
+    
     var text: String
     var timeStamp: Date
     weak var post: Post?
@@ -41,5 +44,25 @@ class Comment {
         self.timeStamp = timeStamp
         self.post = post
     }
-    
+}
+
+extension Comment: SearchableRecord {
+    func matches(searchTerm: String) -> Bool {
+        return text.contains(searchTerm)
+    }
+}
+
+extension Post: SearchableRecord {
+    func matches(searchTerm: String) -> Bool {
+        if caption.contains(searchTerm) {
+            return true
+        } else {
+            for comment in comments {
+                if comment.matches(searchTerm: searchTerm) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
 }

@@ -12,17 +12,19 @@ import CloudKit
 class PostController {
     // MARK: - shared instance
     static let shared = PostController()
+    
     // MARK: - SoT
     var posts: [Post] = []
     
     //MARK: - CRUD
-    func createPostWith(image: UIImage, caption: String, closure: @escaping (Post?) -> Void) {
+    func createPostWith(image: UIImage, caption: String, completion: @escaping (Post?) -> Void) {
         let newPost = Post(caption: caption, photo: image)
         posts.append(newPost)
     }
     
     func addComment(post: Post, text: String, closure: @escaping (Comment?) -> Void) {
-        
+        let newComment = Comment(text: text, post: post)
+        post.comments.append(newComment)
     }
 }
 

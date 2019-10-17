@@ -24,8 +24,9 @@ class PostListTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         searchBar.delegate = self
-        tableView.rowHeight = 300
-        tableView.estimatedRowHeight = 300
+        performFullSync(completion: nil)
+        tableView.rowHeight = 400
+        tableView.estimatedRowHeight = 400
         
     }
     
@@ -53,11 +54,18 @@ class PostListTableViewController: UITableViewController {
     }
     
     
-    
-    
-    
+    func performFullSync(completion:((Bool) ->Void)?) {
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+        PostController.shared.fetchPosts { (posts) in
+            DispatchQueue.main.async {
+                UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                self.tableView.reloadData()
+                completion?(posts != nil)
+            }
+        }
+        
+    }
     // MARK: - Navigation
-    
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "toPostDetailVC" {

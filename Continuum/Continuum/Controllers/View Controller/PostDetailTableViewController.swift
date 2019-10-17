@@ -23,6 +23,12 @@ class PostDetailTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        guard let post = post else { return }
+        PostController.shared.fetchCommentsFor(post: post) { (_) in
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
     }
     
     // Actions
